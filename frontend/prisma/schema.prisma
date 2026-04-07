@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String?
+  passwordHash   String
+  avatarUrl      String?
+  credits        Int       @default(10)
+  lastCreditReset DateTime @default(now())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  role             Role      @default(USER)
+  punishmentLevel  Int       @default(0) // 0=Clean, 1=Warning, 2=Restricted, 3=Banned
+  flaggedCount     Int       @default(0)
+  punishmentReason String?
+
+  sessions       Session[]
+  transactions   Transaction[]
+  projects       Project[]
+  adImpressions  AdImpression[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Transaction {
+  id        String          @id @default(cuid())
+  userId    String
+  amount    Int
+  type      TransactionType
+  detail    String?
+  createdAt DateTime        @default(now())
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum TransactionType {
+  DEDUCTION
+  DAILY_RESET
+  AD_REFILL
+  ADMIN_GRANT
+}
+
+model Project {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String   @default("Untitled")
+  imageUrl  String?
+  resultUrl String?
+  toolUsed  String?
+  prompt    String?
+  isPublic  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AdImpression {
+  id        String   @id @default(cuid())
+  userId    String
+  adType    String
+  adBrand   String?
+  clicked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

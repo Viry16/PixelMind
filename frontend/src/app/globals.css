@@ -1,0 +1,284 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════
+   PixelMind — "The Designer's Darkroom" Design System
+   ═══════════════════════════════════════════════════ */
+
+:root {
+  /* Core Palette */
+  --deep-onyx: #0A0A0A;
+  --onyx-surface: #111111;
+  --onyx-elevated: #1A1A1A;
+  --onyx-hover: #222222;
+
+  /* Accent — Electric Violet */
+  --electric-violet: #8B5CF6;
+  --violet-glow: #A78BFA;
+  --violet-dim: #6D28D9;
+  --violet-ghost: rgba(139, 92, 246, 0.08);
+  --violet-border: rgba(139, 92, 246, 0.2);
+
+  /* Slate Text */
+  --slate-primary: #94A3B8;
+  --slate-muted: #64748B;
+  --slate-dim: #334155;
+  --white-primary: #F8FAFC;
+  --white-secondary: #E2E8F0;
+
+  /* Status */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Background & Foreground */
+  --background: #0A0A0A;
+  --foreground: #F8FAFC;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-deep-onyx: var(--deep-onyx);
+  --color-onyx-surface: var(--onyx-surface);
+  --color-onyx-elevated: var(--onyx-elevated);
+  --color-onyx-hover: var(--onyx-hover);
+  --color-electric-violet: var(--electric-violet);
+  --color-violet-glow: var(--violet-glow);
+  --color-violet-dim: var(--violet-dim);
+  --color-violet-ghost: var(--violet-ghost);
+  --color-violet-border: var(--violet-border);
+  --color-slate-primary: var(--slate-primary);
+  --color-slate-muted: var(--slate-muted);
+  --color-slate-dim: var(--slate-dim);
+  --color-white-primary: var(--white-primary);
+  --color-white-secondary: var(--white-secondary);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ── Global Resets ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--slate-dim) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--slate-dim);
+  border-radius: 999px;
+}
+
+html {
+  background: var(--background);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Shimmer Border Animation ── */
+@keyframes shimmer-rotate {
+  0% { --shimmer-angle: 0deg; }
+  100% { --shimmer-angle: 360deg; }
+}
+
+@property --shimmer-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.shimmer-border {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.shimmer-border::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--shimmer-angle),
+    transparent 0%,
+    var(--electric-violet) 10%,
+    var(--violet-glow) 20%,
+    transparent 30%,
+    transparent 70%,
+    var(--violet-dim) 80%,
+    var(--electric-violet) 90%,
+    transparent 100%
+  );
+  animation: shimmer-rotate 2s linear infinite;
+  z-index: -1;
+}
+
+.shimmer-border::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: calc(var(--radius-lg) - 2px);
+  background: var(--onyx-surface);
+  z-index: -1;
+}
+
+/* ── Gradient Mesh Background ── */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.gradient-mesh {
+  background: 
+    radial-gradient(ellipse at 20% 50%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(109, 40, 217, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(167, 139, 250, 0.06) 0%, transparent 50%),
+    var(--deep-onyx);
+}
+
+/* ── Glass Effect ── */
+.glass {
+  background: rgba(17, 17, 17, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.12);
+}
+
+.glass-strong {
+  background: rgba(17, 17, 17, 0.85);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+/* ── Button Styles ── */
+.btn-primary {
+  background: linear-gradient(135deg, var(--electric-violet), var(--violet-dim));
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--violet-glow), var(--electric-violet));
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.btn-primary:hover::before {
+  opacity: 1;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--slate-primary);
+  border: 1px solid var(--slate-dim);
+  border-radius: var(--radius-md);
+  padding: 10px 24px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-ghost:hover {
+  border-color: var(--electric-violet);
+  color: var(--violet-glow);
+  background: var(--violet-ghost);
+}
+
+/* ── Floating Glow ── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ── Pulse Glow ── */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.4); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ── Fade In Up ── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* ── Skeleton Shimmer ── */
+@keyframes skeleton-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--onyx-surface) 25%,
+    var(--onyx-elevated) 50%,
+    var(--onyx-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
